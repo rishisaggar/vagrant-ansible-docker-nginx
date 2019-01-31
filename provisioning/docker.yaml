@@ -1,0 +1,57 @@
+---
+- name: Remove old instance of docker, if exists.
+  yum:
+    name: docker
+    state: absent
+- name: Remove old instance of docker-common, if exists.
+  yum:
+    name: docker-common
+    state: absent
+- name: Remove old instance of docker-selinux, if exists.
+  yum:
+    name: docker-selinux
+    state: absent
+- name: Remove old instance of docker-engine, if exists.
+  yum:
+    name: docker-engine
+    state: absent
+- name: Install docker pre reqs - yum-utils.
+  yum:
+    name: yum-utils
+    state: present
+- name: Install docker pre reqs - device-mapper-persistent-data.
+  yum:
+    name: device-mapper-persistent-data
+    state: present
+- name: Install docker pre reqs - lvm2.
+  yum:
+    name: lvm2
+    state: present
+- name: Add Docker-CE repository
+  shell: yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
+- name: Update cache
+  yum:
+    name: "*"
+    update_cache: yes
+- name: Install docker
+  yum:
+    name: docker-ce
+    state: present
+- name: Start docker
+  systemd:
+    name: docker
+    state: started
+    enabled: True
+- name: Install python
+  yum:
+    name: python-pip
+    state: present
+- name: Install docker-py
+  pip:
+    name: docker-py
+- name: Add vagrant user to docker group.
+  user:
+    name: vagrant
+    groups: docker
+    append: yes
+  become: yes

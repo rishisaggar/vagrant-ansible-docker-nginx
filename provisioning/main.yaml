@@ -1,0 +1,9 @@
+---
+- hosts: DockerBox
+  remote_user: vagrant
+  become: yes
+  roles:
+      - geerlingguy.repo-epel
+  tasks:
+    - include: docker.yaml
+    - include: www.yaml
